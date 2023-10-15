@@ -2,9 +2,9 @@ var express = require('express');
 const jdenticon = require("jdenticon");
 var router = express.Router();
 
-router.get('/', function(req, res) {
+router.get('/:value', function(req, res) {
     let size = req.query.size || 200;
-    const value = req.query.value || "koenidv";
+    const value = req.params.value || req.query.value || "koenidv";
     
     if (req.format === "svg") {
         size = Math.max(size, 10240)
