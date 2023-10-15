@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const { rateLimit } = require('express-rate-limit')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -20,9 +21,19 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+const limiter = rateLimit({
+	windowMs: 60 * 1000, // 1 minute
+	limit: 12, // Limit each IP to 12 requests per `window`
+	standardHeaders: 'draft-7',
+	legacyHeaders: false,
+})
+
+app.use('/identicon', limiter)
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/identicon', identiconRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
