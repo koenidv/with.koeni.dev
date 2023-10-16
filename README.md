@@ -14,4 +14,4 @@ Generate reproducible, human-differentiable images for any value. Uses [jdentico
 
 The WithKoeni collection is ready to be dockerized. To deploy it on any docker system:
 
-`docker build https://github.com/koenidv/with.koeni.dev.git -p 3000:3000`
+`docker run -it $(docker build -q https://github.com/koenidv/with.koeni.dev.git -p 3000:3000)`
