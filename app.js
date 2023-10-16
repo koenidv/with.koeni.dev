@@ -23,7 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const limiter = rateLimit({
 	windowMs: 60 * 1000, // 1 minute
-	limit: 12, // Limit each IP to 12 requests per `window`
+	limit: 60, // Limit each IP to 60 requests per `window`
 	standardHeaders: 'draft-7',
 	legacyHeaders: false,
 })
