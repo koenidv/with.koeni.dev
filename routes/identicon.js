@@ -2,9 +2,9 @@ var express = require('express');
 const jdenticon = require("jdenticon");
 var router = express.Router();
 
-router.get('/:value', function(req, res) {
+router.get('/:value', (req, res) => {
     let size = req.query.size || 200;
-    const value = req.params.value || req.query.value || "koenidv";
+    const value = req.params.value;
     
     if (req.format === "svg") {
         size = Math.max(size, 10240)
@@ -16,5 +16,9 @@ router.get('/:value', function(req, res) {
         res.send(jdenticon.toPng(value, size));
     }
 });
+
+router.get('/', (req, res) => {
+    res.render('identicon/index', { title: 'Identicon API', path: "https://" + req.get("host") + req.originalUrl });  
+})
 
 module.exports = router;

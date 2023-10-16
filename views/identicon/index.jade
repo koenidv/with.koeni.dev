@@ -1,0 +1,38 @@
+extends ../layout
+
+block content
+  h1= title
+  p
+    | based on 
+    a(href="https://jdenticon.com/") jdenticon 
+    | & hosted by 
+    a(href="https://koeni.dev") koenidv
+  
+  h2 Documentation
+  
+  h3 Identicon value 
+  p Simply pass any value as part of the url, like: 
+  code 
+    | GET 
+    = path
+    | /
+    span.highlight dings
+  
+  h3 Image format
+  p You can choose between png (default) and svg using the `type` parameter.
+  code 
+    | GET 
+    = path
+    | /dings
+    span.highlight ?type=svg
+
+  h3 Image size
+  p You can specify an image size using the `size` parameter. PNGs are limited to 1024px, and images are always square.
+  code 
+    | GET 
+    = path
+    | /dings
+    span.highlight ?size=512 
+
+  h2 Usage limits
+  p The API is currently rate-limited to 12 requests per minute per IP.

@@ -3,6 +3,24 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+h2, h3 {
+  margin-top: 2rem;
+}
+
 a {
-  color: #00B7FF;
+  color: #f89f5b;
+}
+
+code {
+  background: #f0f0f0;
+  border-radius: 0.2rem;
+  padding: 0.2rem;
+  min-height: 12rem;
+  max-width: 100%;
+}
+
+.highlight {
+  color: #f89f5b;
+  text-decoration: underline;
+  text-decoration-color: #f89f5b;
 }
