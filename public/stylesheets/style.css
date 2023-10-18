@@ -22,7 +22,6 @@ code {
 .highlight {
   color: #f89f5b;
   text-decoration: underline;
-  text-decoration-color: #f89f5b;
 }
 
 .docimage {
@@ -33,4 +32,17 @@ code {
   border: 1px solid #f0f0f0;
   border-radius: 0.25rem;
   margin: 0.5rem 0;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  html {
+    background: #111111;
+    color: #f0f0f0;
+  }
+  code {
+    background: #222222;
+  }
+  a, .highlight {
+    color: #df86fa;
+  }
 }
