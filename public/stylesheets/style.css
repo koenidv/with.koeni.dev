@@ -24,3 +24,13 @@ code {
   text-decoration: underline;
   text-decoration-color: #f89f5b;
 }
+
+.docimage {
+  width: 12rem;
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+  border: 1px solid #f0f0f0;
+  border-radius: 0.25rem;
+  margin: 0.5rem 0;
+}
