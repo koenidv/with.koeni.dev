@@ -36,7 +36,7 @@ app.use('/identicon', limiter)
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/identicon', identiconRouter);
-app.use('/spotify', corsRouter);
+app.use('/cors', corsRouter);
 
 
 // catch 404 and forward to error handler
