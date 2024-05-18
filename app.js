@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -8,6 +10,7 @@ const { rateLimit } = require('express-rate-limit')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var identiconRouter = require('./routes/identicon');
+var corsRouter = require('./routes/cors');
 
 var app = express();
 
@@ -33,6 +36,7 @@ app.use('/identicon', limiter)
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/identicon', identiconRouter);
+app.use('/spotify', corsRouter);
 
 
 // catch 404 and forward to error handler
