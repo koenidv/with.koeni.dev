@@ -8,10 +8,10 @@
     "push": "docker push koenidv/with.koeni.dev:latest"
   },
   "dependencies": {
-    "cookie-parser": "~1.4.4",
+    "cookie-parser": "~1.4.7",
     "debug": "~2.6.9",
     "dotenv": "^16.4.5",
-    "express": "~4.21.0",
+    "express": "~4.21.1",
     "express-rate-limit": "^7.1.1",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
