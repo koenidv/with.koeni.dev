@@ -79,6 +79,11 @@ router.get('/tracks', async (req, res) => {
         return res.status(400).json({ error: 'playlistId parameter is required' });
     }
 
+    // Validate playlist ID format (alphanumeric characters only)
+    if (!/^[a-zA-Z0-9]+$/.test(playlistId)) {
+        return res.status(400).json({ error: 'Invalid playlistId format' });
+    }
+
     try {
         const token = await getSpotifyToken();
 
