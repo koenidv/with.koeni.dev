@@ -11,6 +11,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var identiconRouter = require('./routes/identicon');
 var corsRouter = require('./routes/cors');
+var spotifyRouter = require('./routes/spotify');
 
 var app = express();
 
@@ -37,6 +38,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/identicon', identiconRouter);
 app.use('/cors', corsRouter);
+app.use('/spotify', spotifyRouter);
 
 
 // catch 404 and forward to error handler
