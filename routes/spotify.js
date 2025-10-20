@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-const axios = require('axios');
 
 const CORS_ALLOW_DOMAIN_PATTERN = /^https:\/\/([a-z0-9-]+\.)*koeni\.dev$/;
 
@@ -26,23 +25,29 @@ async function getSpotifyToken() {
     }
 
     try {
-        const response = await axios.post('https://accounts.spotify.com/api/token', 
-            'grant_type=client_credentials',
-            {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': 'Basic ' + Buffer.from(clientId + ':' + clientSecret).toString('base64')
-                }
-            }
-        );
+        const response = await fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': 'Basic ' + Buffer.from(clientId + ':' + clientSecret).toString('base64')
+            },
+            body: 'grant_type=client_credentials'
+        });
 
-        spotifyToken = response.data.access_token;
+        if (!response.ok) {
+            const errorData = await response.text();
+            console.error('Error getting Spotify token:', errorData);
+            throw new Error('Failed to authenticate with Spotify');
+        }
+
+        const data = await response.json();
+        spotifyToken = data.access_token;
         // Set expiration with a 60-second buffer
-        tokenExpiresAt = Date.now() + (response.data.expires_in - 60) * 1000;
+        tokenExpiresAt = Date.now() + (data.expires_in - 60) * 1000;
 
         return spotifyToken;
     } catch (error) {
-        console.error('Error getting Spotify token:', error.response?.data || error.message);
+        console.error('Error getting Spotify token:', error.message);
         throw new Error('Failed to authenticate with Spotify');
     }
 }
@@ -87,23 +92,28 @@ router.get('/tracks', async (req, res) => {
     try {
         const token = await getSpotifyToken();
 
-        const response = await axios.get(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+        const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
 
-        res.json(response.data);
-    } catch (error) {
-        console.error('Error fetching playlist tracks:', error.response?.data || error.message);
-        
-        if (error.response?.status === 404) {
-            res.status(404).json({ error: 'Playlist not found' });
-        } else if (error.response?.status === 401) {
-            res.status(401).json({ error: 'Authentication failed' });
-        } else {
-            res.status(500).json({ error: 'Internal server error' });
+        if (!response.ok) {
+            if (response.status === 404) {
+                return res.status(404).json({ error: 'Playlist not found' });
+            } else if (response.status === 401) {
+                return res.status(401).json({ error: 'Authentication failed' });
+            } else {
+                console.error('Error fetching playlist tracks:', response.status, response.statusText);
+                return res.status(500).json({ error: 'Internal server error' });
+            }
         }
+
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        console.error('Error fetching playlist tracks:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
