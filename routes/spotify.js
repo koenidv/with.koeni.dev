@@ -7,6 +7,9 @@ const CORS_ALLOW_DOMAIN_PATTERN = /^https:\/\/([a-z0-9-]+\.)*koeni\.dev$/;
 let spotifyToken = null;
 let tokenExpiresAt = null;
 
+// In-memory cache for playlist tracks (48 hours TTL)
+const tracksCache = new Map(); // playlistId -> { data, expiresAt }
+
 /**
  * Get a valid Spotify access token using client credentials flow
  */
@@ -90,6 +93,12 @@ router.get('/tracks', async (req, res) => {
     }
 
     try {
+        // Check cache first
+        const cached = tracksCache.get(playlistId);
+        if (cached && Date.now() < cached.expiresAt) {
+            return res.json(cached.data);
+        }
+
         const token = await getSpotifyToken();
 
         const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
@@ -110,6 +119,14 @@ router.get('/tracks', async (req, res) => {
         }
 
         const data = await response.json();
+        
+        // Cache the response for 48 hours
+        const CACHE_TTL = 48 * 60 * 60 * 1000; // 48 hours in milliseconds
+        tracksCache.set(playlistId, {
+            data: data,
+            expiresAt: Date.now() + CACHE_TTL
+        });
+        
         res.json(data);
     } catch (error) {
         console.error('Error fetching playlist tracks:', error.message);
